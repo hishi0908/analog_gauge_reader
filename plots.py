@@ -24,27 +24,48 @@ class Plotter:
         self.image = image
 
     def set_image(self, image):
+        """
+        プロット対象の画像を設定します。
+        :param image: 設定する画像
+        """
         self.image = image
 
     def save_img(self):
+        """
+        画像を指定されたパスに保存します。
+        """
         im = Image.fromarray(self.image)
         path = os.path.join(self.run_path, constants.ORIGINAL_IMG_FILE_NAME)
         im.save(path)
 
     def plot_image(self, title):
+        """
+        画像をプロットし、指定されたタイトルをファイル名に保存します。
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure()
         plt.imshow(self.image)
         path = os.path.join(self.run_path, f"image_{title}.jpg")
         plt.savefig(path)
-        # plt.show()
 
     def plot_any_image(self, img, title):
+        """
+        任意の画像をプロットします。
+        :param img: プロット対象の画像
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure()
         plt.imshow(img)
         path = os.path.join(self.run_path, f"image_{title}.jpg")
         plt.savefig(path)
 
     def plot_point_img(self, img, points, title):
+        """
+        指定された画像上に点をプロットします。
+        :param img: プロット対象の画像
+        :param points: プロットする点の座標
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure()
         plt.imshow(img)
         plt.scatter(points[:, 0], points[:, 1])
@@ -52,6 +73,11 @@ class Plotter:
         plt.savefig(path)
 
     def plot_ocr_visualization(self, vis, degree=None):
+        """
+        OCRの可視化結果をプロットします。
+        :param vis: 可視化対象の画像
+        :param degree: 角度が必要な場合、その値を指定
+        """
         plt.figure()
         plt.imshow(vis)
         if degree is None:
@@ -64,9 +90,8 @@ class Plotter:
 
     def plot_bounding_box_img(self, boxes):
         """
-        plot detected bounding boxes. boxes is the result of the yolov8 detection
-        :param img: image to draw bounding boxes on
-        :param boxes: list of bounding boxes
+        検出されたバウンディングボックスを画像に描画します。
+        :param boxes: YOLOv8による検出結果のバウンディングボックスのリスト
         """
         img = np.copy(self.image)
         for bbox in boxes:
@@ -88,6 +113,11 @@ class Plotter:
         plt.savefig(path)
 
     def plot_test_point(self, point, title):
+        """
+        画像上にテストポイントをプロットします。
+        :param point: プロットする点の座標
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure(figsize=(12, 8))
         plt.imshow(self.image)
         plt.scatter(point[0], point[1], s=100, c='red', marker='x')
@@ -99,6 +129,10 @@ class Plotter:
         plt.savefig(path)
 
     def plot_key_points(self, key_point_list):
+        """
+        キーポイントを画像上にプロットします。
+        :param key_point_list: キーポイントのリスト
+        """
         plt.figure(figsize=(12, 8))
 
         titles = ['Start', 'Middle', 'End']
@@ -129,25 +163,29 @@ class Plotter:
 
         path = os.path.join(self.run_path, "key_point_results.jpg")
         plt.savefig(path)
-        # plt.show()
 
     def plot_just_ellipse(self, image, ellipse_params, title):
+        """
+        楕円を画像上にプロットします。
+        :param image: プロット対象の画像
+        :param ellipse_params: 楕円のパラメータ
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure()
         plt.imshow(image)
         x, y = get_ellipse_pts(ellipse_params)
-        plt.plot(x, y)  # plot ellipse
+        plt.plot(x, y)  # 楕円をプロット
         path = os.path.join(self.run_path, f"ellipse_{title}.jpg")
         plt.savefig(path)
 
-    def plot_ellipse(self,
-                     points,
-                     ellipse_params,
-                     title,
-                     annotations=None,
-                     annotation_colors=None):
+    def plot_ellipse(self, points, ellipse_params, title, annotations=None, annotation_colors=None):
         """
-        plot ellipse and points with annotations.
-        points is a 2d numpy array with one point per row
+        楕円と点を注釈付きでプロットします。
+        :param points: 点の座標の2次元numpy配列
+        :param ellipse_params: 楕円のパラメータ
+        :param title: ファイル名の一部となるタイトル
+        :param annotations: 各点に対応する注釈のリスト
+        :param annotation_colors: 注釈の色のリスト
         """
         plt.figure()
 
@@ -159,7 +197,7 @@ class Plotter:
         x = points[:, 0]
         y = points[:, 1]
 
-        ax.scatter(x, y, c='#ff0000', s=50)  # plot points
+        ax.scatter(x, y, c='#ff0000', s=50)  # 点をプロット
 
         if annotations is not None and annotation_colors is not None:
             for x_coord, y_coord, annotation, color in zip(
@@ -174,17 +212,17 @@ class Plotter:
                                       edgecolor='none'))
 
         x, y = get_ellipse_pts(ellipse_params)
-        plt.plot(x, y)  # plot ellipse
+        plt.plot(x, y)  # 楕円をプロット
 
         path = os.path.join(self.run_path, f"ellipse_results_{title}.jpg")
         plt.savefig(path)
-        # plt.show()
 
-    def plot_zero_point_ellipse(self, zero_point, start_end_point,
-                                ellipse_params):
+    def plot_zero_point_ellipse(self, zero_point, start_end_point, ellipse_params):
         """
-        plot ellipse and points with annotations.
-        points is a 2d numpy array with one point per row
+        楕円と点をゼロポイントを含めてプロットします。
+        :param zero_point: ゼロポイントの座標
+        :param start_end_point: 始点と終点の座標
+        :param ellipse_params: 楕円のパラメータ
         """
         plt.figure()
 
@@ -200,15 +238,15 @@ class Plotter:
         start_end_color = '#ff0000'
 
         x, y = get_ellipse_pts(ellipse_params)
-        plt.plot(x, y)  # plot ellipse
+        plt.plot(x, y)  # 楕円をプロット
 
         x = start_end_point[:, 0]
         y = start_end_point[:, 1]
-        ax.scatter(x, y, c=start_end_color, s=100)  # plot start end point
+        ax.scatter(x, y, c=start_end_color, s=100)  # 始点と終点をプロット
 
         x = zero_point[0]
         y = zero_point[1]
-        ax.scatter(x, y, c=zero_point_color, s=100)  # plot start end point
+        ax.scatter(x, y, c=zero_point_color, s=100)  # ゼロポイントをプロット
 
         zero_patch = patches.Patch(color=zero_point_color, label='zero-point')
         start_end_patch = patches.Patch(color=start_end_color,
@@ -217,9 +255,13 @@ class Plotter:
 
         path = os.path.join(self.run_path, "ellipse_zero_point.jpg")
         plt.savefig(path)
-        # plt.show()
 
     def plot_project_points_ellipse(self, number_labels, ellipse_params):
+        """
+        投影された点と楕円をプロットします。
+        :param number_labels: 投影された点のラベルリスト
+        :param ellipse_params: 楕円のパラメータ
+        """
         projected_points = []
         annotations = []
 
@@ -242,8 +284,14 @@ class Plotter:
                           annotations=annotations,
                           annotation_colors=annotation_colors)
 
-    def plot_final_reading_ellipse(self, number_labels, needle_point, reading,
-                                   ellipse_params):
+    def plot_final_reading_ellipse(self, number_labels, needle_point, reading, ellipse_params):
+        """
+        楕円、針の位置、最終読み取り値をプロットします。
+        :param number_labels: 数字ラベルのリスト
+        :param needle_point: 針の座標
+        :param reading: 最終読み取り値
+        :param ellipse_params: 楕円のパラメータ
+        """
         projected_points = []
         annotations = []
 
@@ -272,6 +320,11 @@ class Plotter:
                           annotation_colors=annotation_colors)
 
     def plot_ocr(self, readings, title):
+        """
+        OCR結果をプロットします。
+        :param readings: OCR結果のリスト
+        :param title: ファイル名の一部となるタイトル
+        """
         plt.figure()
 
         threshold = 0.9
@@ -302,10 +355,15 @@ class Plotter:
         plt.title(f"ocr results {title}")
         path = os.path.join(self.run_path, f"ocr_results_{title}.jpg")
         plt.savefig(path)
-        # plt.show()
 
-    def plot_segmented_line(self, x_coords, y_coords, x_start_end,
-                            line_coeffs):
+    def plot_segmented_line(self, x_coords, y_coords, x_start_end, line_coeffs):
+        """
+        分割された線をプロットします。
+        :param x_coords: マスク画像内の非ゼロピクセルの列方向インデックス
+        :param y_coords: マスク画像内の非ゼロピクセルの行方向インデックス
+        :param x_start_end: 線の始点と終点のx座標
+        :param line_coeffs: 線の係数
+        """
         line_fn = np.poly1d(line_coeffs)
         # Plot the line on top of the image
         plt.figure()
@@ -316,9 +374,11 @@ class Plotter:
         path = os.path.join(self.run_path, "segmentation_results.jpg")
         plt.savefig(path)
 
-        # plt.show()
-
     def plot_heatmaps(self, heatmaps):
+        """
+        ヒートマップをプロットします。
+        :param heatmaps: ヒートマップデータ
+        """
         plt.figure(figsize=(12, 8))
 
         titles = ['Start', 'Middle', 'End']
@@ -350,12 +410,16 @@ class Plotter:
                 axis[i].set_title(f'Predicted Heatmap {titles[i]}')
             fig.colorbar(im, ax=axis, shrink=0.8)
 
-        # plt.tight_layout()
         path = os.path.join(self.run_path, "heatmaps_results.jpg")
         plt.savefig(path)
-        # plt.show()
 
     def plot_linear_fit(self, ocr_numbers, needle, line):
+        """
+        線形フィットをプロットします。
+        :param ocr_numbers: OCR読み取りの座標
+        :param needle: 針の座標
+        :param line: フィットされた線
+        """
         plt.figure()
 
         x = [0, 2 * np.pi]
@@ -377,6 +441,16 @@ class Plotter:
         # Show the plot
         path = os.path.join(self.run_path, "reading_line_fit.jpg")
         plt.savefig(path)
+
+    def plot_linear_fit_ransac(self, ocr_numbers, needle, line, inlier_mask, outlier_mask):
+        """
+        RANSACによる線形フィットをプロットします。
+        :param ocr_numbers: OCR読み取りの座標
+        :param needle: 針の座標
+        :param line: フィットされた線
+        :param
+        """
+
 
     def plot_linear_fit_ransac(self, ocr_numbers, needle, line, inlier_mask,
                                outlier_mask):
