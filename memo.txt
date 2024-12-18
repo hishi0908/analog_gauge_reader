@@ -1,0 +1,8 @@
+poetry env use C:\Users\hishi\AppData\Local\Programs\Python\Python38\python.exe  
+Pythonの古いバージョンを使うように指定する。
+poetry install その後インストール
+
+poetry lock --no-update
+
+
+python pipeline.py --detection_model C:\github\analog_gauge_reader\models\gauge_detection_model.pt  --segmentation_model C:\github\analog_gauge_reader\models\segmentation_model.pt   --key_point_model C:\github\analog_gauge_reader\models\key_point_model.pt  --base_path C:\github\analog_gauge_reader\results   --input C:\github\analog_gauge_reader\s-DSC_6142.jpg  --debug --eval

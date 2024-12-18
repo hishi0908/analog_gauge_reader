@@ -379,7 +379,10 @@ def process_image(image, detection_model_path, key_point_model_path,
 
     logging.info("Finish OCR")
 
+
+    #========================================================
     # ------------------Segmentation-------------------------
+    #========================================================
 
     if debug:
         print("-------------------")
@@ -389,7 +392,7 @@ def process_image(image, detection_model_path, key_point_model_path,
 
     try:
         needle_mask_x, needle_mask_y = segment_gauge_needle(
-            cropped_resized_img, segmentation_model_path)
+            cropped_resized_img, segmentation_model_path)                       #segmentation_inferenve.pyより
     except AttributeError:
         logging.error("Segmentation failed, no needle found")
         errors[constants.SEGMENTATION_FAILED_KEY] = True
@@ -404,25 +407,31 @@ def process_image(image, detection_model_path, key_point_model_path,
             'y': needle_mask_y.tolist()
         }
 
-    needle_line_coeffs, needle_error = get_fitted_line(needle_mask_x,
+    needle_line_coeffs, needle_error = get_fitted_line(needle_mask_x,           #segmentation_inferenve.pyより
                                                        needle_mask_y)
-    needle_line_start_x, needle_line_end_x = get_start_end_line(needle_mask_x)
-    needle_line_start_y, needle_line_end_y = get_start_end_line(needle_mask_y)
+    needle_line_start_x, needle_line_end_x = get_start_end_line(needle_mask_x)  #segmentation_inferenve.pyより
+    needle_line_start_y, needle_line_end_y = get_start_end_line(needle_mask_y)  #segmentation_inferenve.pyより
 
-    needle_line_start_x, needle_line_end_x = cut_off_line(
+    needle_line_start_x, needle_line_end_x = cut_off_line(                      #segmentation_inferenve.pyより
         [needle_line_start_x, needle_line_end_x], needle_line_start_y,
         needle_line_end_y, needle_line_coeffs)
 
     errors["Needle line residual variance"] = needle_error
 
     if debug:
-        plotter.plot_segmented_line(needle_mask_x, needle_mask_y,
+        plotter.plot_segmented_line(needle_mask_x, needle_mask_y,               #plots.pyより
                                     (needle_line_start_x, needle_line_end_x),
                                     needle_line_coeffs)
 
     logging.info("Finish segmentation")
 
+
+
+
+
+    #==========================================================================
     # ------------------Project OCR Numbers to ellipse-------------------------
+    #==========================================================================
 
     if debug:
         print("-------------------")

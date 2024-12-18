@@ -138,3 +138,7 @@ yolov8?-seg.pt
 .vscode/
 **/runs
 **/data
+
+results/
+*.png
+*.jpg

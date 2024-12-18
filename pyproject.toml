@@ -10,7 +10,7 @@ readme = "README.md"
 python = "^3.8"
 torch = "2.0.0"
 torchvision = "0.15.1"
-mmcv = {url = "https://download.openmmlab.com/mmcv/dist/cpu/torch2.0.0/mmcv-2.0.0-cp38-cp38-manylinux1_x86_64.whl"}
+mmcv = {url = "https://download.openmmlab.com/mmcv/dist/cpu/torch2.0.0/mmcv-2.0.0-cp38-cp38-win_amd64.whl"}
 mmengine = "0.7.2"
 mmdet = "3.0.0"
 mmocr = "1.0.0"
